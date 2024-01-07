@@ -1,7 +1,6 @@
 package br.com.fiap.lanchonete.api.adapter;
 
 import br.com.fiap.lanchonete.api.dto.request.PedidoRequest;
-import br.com.fiap.lanchonete.api.dto.response.PagamentoStatusResponse;
 import br.com.fiap.lanchonete.api.dto.response.PedidoResponse;
 import br.com.fiap.lanchonete.api.dto.response.StatusResponse;
 import br.com.fiap.lanchonete.core.entity.*;
@@ -38,10 +37,6 @@ public class PedidoAdapter {
         response.setQrData(qrData);
         return response;
     }
-    public static PedidoResponse toResponse(Pedido pedido) {
-        final var status = new StatusResponse(pedido.getStatus().getTipo());
-        return  new PedidoResponse(pedido.getId(), formatarParaReal(pedido.getValor()), status);
-    }
     public static Pedido toPedido(PedidoRequest request, Cliente cliente, List<Produto> produtos, Status status) {
         return new Pedido(getProdutosSelecionados(request, produtos), cliente, status);
     }
@@ -56,18 +51,5 @@ public class PedidoAdapter {
 
     private static String formatarParaReal(BigDecimal valor){
         return "R$" + new DecimalFormat("#,###,##0.00", new DecimalFormatSymbols(new Locale("pt", "BR"))).format(valor);
-    }
-
-    public static PedidoEntity toUpdate(Pedido pedido) {
-        return new PedidoEntity(pedido);
-    }
-
-    public static PedidoResponse toResponseUpdate(Pedido pedido) {
-        final var status = new StatusResponse(pedido.getStatus().getTipo());
-        return new PedidoResponse(pedido.getId(), formatarParaReal(pedido.getValor()), status);
-    }
-
-    public static PagamentoStatusResponse toPedidoStatus(String status) {
-        return new PagamentoStatusResponse(status);
     }
 }
