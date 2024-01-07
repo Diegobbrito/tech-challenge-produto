@@ -5,7 +5,6 @@ import br.com.fiap.lanchonete.api.dto.response.ClienteResponse;
 import br.com.fiap.lanchonete.config.UseCase;
 import br.com.fiap.lanchonete.gateway.repository.IClienteRepository;
 
-import java.util.List;
 @UseCase
 public class BuscarClienteUseCase implements IBuscarCliente {
 
@@ -15,11 +14,6 @@ public class BuscarClienteUseCase implements IBuscarCliente {
         this.repository = repository;
     }
 
-    @Override
-    public List<ClienteResponse> buscarTodos() {
-        final var clientes = this.repository.buscarTodos();
-        return null;
-    }
 
     @Override
     public ClienteResponse buscarClientePorCpf(String cpf) {

@@ -1,6 +1,6 @@
 package br.com.fiap.lanchonete.core.usecase.categoria;
 
-import br.com.fiap.lanchonete.api.adapter.CategoriaAdapter;
+import br.com.fiap.lanchonete.api.adapter.ProdutoAdapter;
 import br.com.fiap.lanchonete.api.dto.response.CategoriaResponse;
 import br.com.fiap.lanchonete.config.UseCase;
 import br.com.fiap.lanchonete.gateway.repository.ICategoriaRepository;
@@ -19,6 +19,6 @@ public class BuscarCategoriaUseCase implements IBuscarCategoria {
     @Override
     public List<CategoriaResponse> buscarTodas() {
         final var categoria = this.repository.buscarTodas();
-        return categoria.stream().map(CategoriaAdapter::toResponse).collect(Collectors.toList());
+        return categoria.stream().map(ProdutoAdapter::toResponse).collect(Collectors.toList());
     }
 }

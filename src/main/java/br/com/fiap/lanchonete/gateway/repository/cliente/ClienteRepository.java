@@ -7,7 +7,6 @@ import br.com.fiap.lanchonete.core.exception.ClienteInexistenteException;
 import br.com.fiap.lanchonete.gateway.repository.IClienteRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 @Component
 public class ClienteRepository implements IClienteRepository {
@@ -16,12 +15,6 @@ public class ClienteRepository implements IClienteRepository {
 
     public ClienteRepository(JpaClienteRepository repository) {
         this.repository = repository;
-    }
-
-    @Override
-    public List<Cliente> buscarTodos() {
-        final var clientes = repository.findAll();
-        return null;
     }
 
     @Override
