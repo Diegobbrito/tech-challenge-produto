@@ -1,0 +1,40 @@
+package br.com.fiap.pedido.gateway.repository.cliente;
+
+import br.com.fiap.pedido.api.adapter.ClienteAdapter;
+import br.com.fiap.pedido.core.entity.Cliente;
+import br.com.fiap.pedido.core.exception.ClienteCadastradoException;
+import br.com.fiap.pedido.core.exception.ClienteInexistenteException;
+import br.com.fiap.pedido.gateway.repository.IClienteRepository;
+import org.springframework.stereotype.Component;
+
+
+@Component
+public class ClienteRepository implements IClienteRepository {
+
+    private final JpaClienteRepository repository;
+
+    public ClienteRepository(JpaClienteRepository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public Cliente salvar(Cliente cliente) {
+        final var checkCliente = repository
+                .findByCpf(cliente.getCpf().getValor());
+        if(checkCliente.isPresent()){
+            throw new ClienteCadastradoException("Cliente já cadastrado.");
+        }
+        final var clienteEntity = new ClienteEntity(cliente);
+        final var entity = repository.save(clienteEntity);
+        return ClienteAdapter.toCliente(entity);
+    }
+
+
+    @Override
+    public Cliente buscarClientePorCpf(String cpf) {
+        final var cliente = repository
+                .findByCpf(cpf)
+                .orElseThrow(() -> new ClienteInexistenteException("Cliente não entrado"));
+        return ClienteAdapter.toCliente(cliente);
+    }
+}
