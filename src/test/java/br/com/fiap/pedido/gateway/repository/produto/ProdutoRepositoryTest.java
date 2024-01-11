@@ -94,6 +94,9 @@ public class ProdutoRepositoryTest {
                 .extracting(Produto::getCategoria)
                 .isNotNull()
                 .isInstanceOf(Categoria.class);
+        assertThat(produtos.get(0).getCategoria().getId())
+                .isNotNull()
+                .isEqualTo(1);
 
     }
 
@@ -119,7 +122,7 @@ public class ProdutoRepositoryTest {
         assertThat(produtos.get(1))
                 .extracting(Produto::getId)
                 .isEqualTo(2);
-        assertThat(produtos.get(2))
+        assertThat(produtos.get(1))
                 .extracting(Produto::getNome)
                 .isEqualTo("Suco de laranja");
     }
