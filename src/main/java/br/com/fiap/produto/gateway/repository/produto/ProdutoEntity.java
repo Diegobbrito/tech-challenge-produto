@@ -1,5 +1,6 @@
 package br.com.fiap.produto.gateway.repository.produto;
 
+
 import br.com.fiap.produto.core.entity.Produto;
 import br.com.fiap.produto.gateway.repository.categoria.CategoriaEntity;
 import jakarta.persistence.*;

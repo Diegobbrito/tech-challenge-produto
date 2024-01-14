@@ -26,9 +26,9 @@
 	</pluginRepositories>
 
 	<groupId>br.com.fiap</groupId>
-	<artifactId>pedido</artifactId>
+	<artifactId>produto</artifactId>
 	<version>1.0.0</version>
-	<name>pedido</name>
+	<name>produto</name>
 	<description>Tech Challenge Fiap</description>
 	<properties>
 		<java.version>17</java.version>
