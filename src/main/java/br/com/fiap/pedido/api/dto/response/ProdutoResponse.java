@@ -10,5 +10,6 @@ public record ProdutoResponse (
         @Schema(example = "Pão de brioche, hambúrguer Angus de 150g e queijo mussarela")
         String descricao,
         @Schema(example = "R$ 24,90")
-        String valor, String imagemUrl){
+        String valor,
+        String imagemUrl){
 }

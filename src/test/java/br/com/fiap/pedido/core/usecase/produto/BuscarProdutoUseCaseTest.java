@@ -1,16 +1,15 @@
 package br.com.fiap.pedido.core.usecase.produto;
 
 import br.com.fiap.pedido.api.dto.response.ProdutoResponse;
-import br.com.fiap.pedido.core.entity.Categoria;
 import br.com.fiap.pedido.core.entity.Produto;
 import br.com.fiap.pedido.gateway.repository.produto.ProdutoRepository;
+import br.com.fiap.pedido.utils.ProdutosHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +41,7 @@ class BuscarProdutoUseCaseTest {
     @Test
     void devePermitirConsultarTodosOsProdutos() {
         // Arrange
-        var produtosMock = gerarProdutos();
+        var produtosMock = ProdutosHelper.gerarListaDeProdutos();
         when(repository.buscarTodos()).thenReturn(produtosMock);
         // Act
         var produtos = useCase.buscarTodos();
@@ -66,13 +65,7 @@ class BuscarProdutoUseCaseTest {
     @Test
     void devePermitirConsultarOsProdutosPorCategoria() {
         // Arrange
-        Produto lanche = new Produto(
-                "Hamburguer",
-                "Hamburguer da casa",
-                new BigDecimal("14.90"),
-                new Categoria(1),
-                "teste");
-        lanche.setId(1);
+        Produto lanche =ProdutosHelper.gerarLanche();
         var produtosMock = List.of(lanche);
         when(repository.buscarPorCategoria(any(Integer.class))).thenReturn(produtosMock);
         // Act
@@ -89,24 +82,5 @@ class BuscarProdutoUseCaseTest {
         assertThat(produtos.get(0))
                 .extracting(ProdutoResponse::nome)
                 .isEqualTo("Hamburguer");
-    }
-
-    private List<Produto> gerarProdutos() {
-        Produto lanche = new Produto(
-                "Hamburguer",
-                "Hamburguer da casa",
-                new BigDecimal("14.90"),
-                new Categoria(1),
-                "teste");
-        lanche.setId(1);
-        Produto bebida = new Produto(
-                "Suco de laranja",
-                "Suco de laranja 500ml",
-                new BigDecimal("9.90"),
-                new Categoria(2),
-                "teste");
-        bebida.setId(2);
-
-        return List.of(lanche, bebida);
     }
 }

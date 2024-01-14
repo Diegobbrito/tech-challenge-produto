@@ -14,11 +14,11 @@ public abstract class ProdutosHelper {
     }
 
 
-    public static List<Produto> gerarProdutos() {
+    public static List<Produto> gerarListaDeProdutos() {
         return List.of(gerarLanche(), gerarBebida());
     }
 
-    private static Produto gerarLanche(){
+    public static Produto gerarLanche(){
         Produto lanche = new  Produto(
                 "Hamburguer",
                 "Hamburguer da casa",
@@ -37,6 +37,7 @@ public abstract class ProdutosHelper {
                 new Categoria(2),
                 "teste");
         bebida.setId(2);
+        return bebida;
     }
 
 }
