@@ -1,4 +1,4 @@
-package br.com.fiap.pedido.api.controllers;
+package br.com.fiap.pedido.api.controller;
 
 import br.com.fiap.pedido.api.dto.response.CategoriaResponse;
 import br.com.fiap.pedido.api.dto.response.ProdutoResponse;

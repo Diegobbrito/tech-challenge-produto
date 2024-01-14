@@ -1,4 +1,4 @@
-package br.com.fiap.pedido.api.controllers;
+package br.com.fiap.pedido.api.controller;
 
 import br.com.fiap.pedido.api.dto.request.ClienteRequest;
 import br.com.fiap.pedido.api.dto.response.ClienteResponse;
@@ -16,20 +16,10 @@ import java.net.URI;
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
-
-    private final IBuscarCliente buscarClienteUseCase;
     private final ICriarCliente criarClienteUseCase;
-    public ClienteController(IBuscarCliente buscarClienteUseCase, ICriarCliente criarClienteUseCase) {
-        this.buscarClienteUseCase = buscarClienteUseCase;
+    public ClienteController( ICriarCliente criarClienteUseCase) {
         this.criarClienteUseCase = criarClienteUseCase;
     }
-
-    @Operation(summary = "Busca de cliente por cpf")
-    @GetMapping("/{cpf}")
-    public ResponseEntity<ClienteResponse> buscaClientePorCpf(@Parameter(example = "055.069.020-42") @PathVariable String cpf){
-        return ResponseEntity.ok(buscarClienteUseCase.buscarClientePorCpf(cpf));
-    }
-
     @Operation(summary = "Criação de cliente")
     @PostMapping
     public ResponseEntity<ClienteResponse> cadastrar(@RequestBody ClienteRequest request){
