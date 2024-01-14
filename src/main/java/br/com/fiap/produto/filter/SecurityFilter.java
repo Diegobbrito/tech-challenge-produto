@@ -18,8 +18,6 @@ import java.io.IOException;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-
-
     private final JwtService jwtService;
 
     public SecurityFilter(JwtService jwtService) {

@@ -29,6 +29,17 @@ public abstract class ProdutosHelper {
         return lanche;
     }
 
+    public static ProdutoEntity gerarProdutoEntity(){
+        Produto lanche = new  Produto(
+                "Hamburguer",
+                "Hamburguer da casa",
+                new BigDecimal("14.90"),
+                new Categoria(1),
+                "teste");
+        lanche.setId(1);
+        return new ProdutoEntity(lanche);
+    }
+
     private static Produto gerarBebida(){
         Produto bebida = new Produto(
                 "Suco de laranja",
