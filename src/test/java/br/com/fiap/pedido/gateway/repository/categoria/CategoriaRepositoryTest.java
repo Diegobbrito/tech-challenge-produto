@@ -1,7 +1,6 @@
 package br.com.fiap.pedido.gateway.repository.categoria;
 
 import br.com.fiap.pedido.core.entity.Categoria;
-import br.com.fiap.pedido.core.entity.Produto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,10 +10,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class CategoriaRepositoryTest {
+class CategoriaRepositoryTest {
 
 
     private CategoriaRepository categoriaRepository;

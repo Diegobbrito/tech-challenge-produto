@@ -3,8 +3,6 @@ package br.com.fiap.pedido.core.usecase.produto;
 import br.com.fiap.pedido.api.dto.response.ProdutoResponse;
 import br.com.fiap.pedido.core.entity.Categoria;
 import br.com.fiap.pedido.core.entity.Produto;
-import br.com.fiap.pedido.gateway.repository.produto.JpaProdutoRepository;
-import br.com.fiap.pedido.gateway.repository.produto.ProdutoEntity;
 import br.com.fiap.pedido.gateway.repository.produto.ProdutoRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class BuscarProdutoUseCaseTest {
+class BuscarProdutoUseCaseTest {
 
 
     private BuscarProdutoUseCase useCase;

@@ -3,7 +3,6 @@ package br.com.fiap.pedido.core.usecase.categoria;
 import br.com.fiap.pedido.api.dto.response.CategoriaResponse;
 import br.com.fiap.pedido.core.entity.Categoria;
 import br.com.fiap.pedido.gateway.repository.ICategoriaRepository;
-import br.com.fiap.pedido.gateway.repository.categoria.CategoriaEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -16,7 +15,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class BuscarCategoriaUseCaseTest {
+class BuscarCategoriaUseCaseTest {
 
     private BuscarCategoriaUseCase useCase;
     @Mock

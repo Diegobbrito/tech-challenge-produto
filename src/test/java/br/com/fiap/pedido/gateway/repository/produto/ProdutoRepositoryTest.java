@@ -6,9 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 
-
 import br.com.fiap.pedido.core.entity.Categoria;
 import br.com.fiap.pedido.core.entity.Produto;
+import br.com.fiap.pedido.utils.ProdutosHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class ProdutoRepositoryTest {
     @Test
     void devePermitirConsultarTodosOsProdutos() {
         // Arrange
-        var produtosMock = gerarProdutos();
+        var produtosMock = ProdutosHelper.gerarListaDeProdutoEntity();
         when(jpaRepository.findAll()).thenReturn(produtosMock);
         // Act
         var produtos = produtoRepository.buscarTodos();
@@ -103,7 +103,7 @@ public class ProdutoRepositoryTest {
     @Test
     void devePermitirConsultarOsProdutosPorIds() {
         // Arrange
-        var produtosMock = gerarProdutos();
+        var produtosMock = ProdutosHelper.gerarListaDeProdutoEntity();
         when(jpaRepository.findByIdIn(any())).thenReturn(produtosMock);
         // Act
         var produtos = produtoRepository.buscarTodosPorIds(List.of(1,2));
@@ -127,22 +127,4 @@ public class ProdutoRepositoryTest {
                 .isEqualTo("Suco de laranja");
     }
 
-    private List<ProdutoEntity> gerarProdutos() {
-        Produto lanche = new Produto(
-                "Hamburguer",
-                "Hamburguer da casa",
-                new BigDecimal("14.90"),
-                new Categoria(1),
-                "teste");
-        lanche.setId(1);
-        Produto bebida = new Produto(
-                "Suco de laranja",
-                "Suco de laranja 500ml",
-                new BigDecimal("9.90"),
-                new Categoria(2),
-                "teste");
-        bebida.setId(2);
-
-        return List.of(new ProdutoEntity(lanche), new ProdutoEntity(bebida));
-    }
 }
