@@ -19,7 +19,6 @@ import java.util.List;
 
 @Tag(name = "Produtos", description = "Listagem e controle de produtos")
 @RestController
-@RequestMapping("/produtos")
 public class ProdutoController {
 
     private final IBuscarProduto buscarProdutoUseCase;
@@ -41,18 +40,18 @@ public class ProdutoController {
         return ResponseEntity.ok(buscarCategoriaUseCase.buscarTodas());
     }
     @Operation(summary = "Listagem de todos os produtos")
-    @GetMapping
+    @GetMapping("/produtos")
     public ResponseEntity<List<ProdutoResponse>> listarTodos(){
         return ResponseEntity.ok(buscarProdutoUseCase.buscarTodos());
     }
 
     @Operation(summary = "Listagem de produtos por categoria")
-    @GetMapping("/{categoriaId}")
+    @GetMapping("/produtos/{categoriaId}")
     public ResponseEntity<List<ProdutoResponse>> listarPorCategoria(@Parameter(example = "1") @PathVariable Integer categoriaId){
         return ResponseEntity.ok(buscarProdutoUseCase.buscarPorCategoria(categoriaId));
     }
     @Operation(summary = "Criação de produto")
-    @PostMapping
+    @PostMapping("/produtos")
     public ResponseEntity<ProdutoResponse> criar(@RequestBody ProdutoRequest request){
         final var response = criarProdutoUseCase.criar(request);
         final var uri = URI.create("/produtos/" + response.id());
@@ -60,12 +59,12 @@ public class ProdutoController {
     }
 
     @Operation(summary = "Alteração de produto")
-    @PutMapping("/{id}")
+    @PutMapping("/produtos/{id}")
     public ResponseEntity<ProdutoResponse> editar(@Parameter(example = "1") @PathVariable Integer id, @RequestBody ProdutoRequest request){
         return ResponseEntity.ok(gerenciarProdutoUseCase.atualizar(id, request));
     }
     @Operation(summary = "Deleção de produto")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/produtos/{id}")
     public ResponseEntity<Void> remover(@Parameter(example = "1") @PathVariable Integer id){
         gerenciarProdutoUseCase.excluirProduto(id);
         return ResponseEntity.noContent().build();
