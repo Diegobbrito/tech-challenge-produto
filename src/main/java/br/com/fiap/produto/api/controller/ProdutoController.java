@@ -41,7 +41,9 @@ public class ProdutoController {
     }
     @Operation(summary = "Listagem de todos os produtos")
     @GetMapping("/produtos")
-    public ResponseEntity<List<ProdutoResponse>> listarTodos(){
+    public ResponseEntity<List<ProdutoResponse>> listarTodos(@RequestParam(required = false) List<Integer> ids){
+        if(ids !=null)
+            return ResponseEntity.ok(buscarProdutoUseCase.buscarPorIds(ids));
         return ResponseEntity.ok(buscarProdutoUseCase.buscarTodos());
     }
 
@@ -50,13 +52,6 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoResponse>> listarPorCategoria(@Parameter(example = "1") @PathVariable Integer categoriaId){
         return ResponseEntity.ok(buscarProdutoUseCase.buscarPorCategoria(categoriaId));
     }
-
-    @Operation(summary = "Listagem de produtos por ids")
-    @GetMapping(path = "/produtos:byIds", params = "ids")
-    public ResponseEntity<List<ProdutoResponse>> listarPorIds(@RequestParam List<Integer> ids){
-        return ResponseEntity.ok(buscarProdutoUseCase.buscarPorIds(ids));
-    }
-
 
     @Operation(summary = "Criação de produto")
     @PostMapping("/produtos")

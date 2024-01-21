@@ -5,23 +5,9 @@ import br.com.fiap.produto.api.dto.response.CategoriaResponse;
 import br.com.fiap.produto.api.dto.response.ProdutoResponse;
 import br.com.fiap.produto.api.handler.RestExceptionHandler;
 import br.com.fiap.produto.core.usecase.categoria.IBuscarCategoria;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
 import br.com.fiap.produto.core.usecase.produto.IBuscarProduto;
 import br.com.fiap.produto.core.usecase.produto.ICriarProduto;
 import br.com.fiap.produto.core.usecase.produto.IGerenciarProduto;
-import br.com.fiap.produto.gateway.repository.produto.ProdutoEntity;
 import br.com.fiap.produto.utils.ProdutosHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -33,6 +19,14 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ProdutoControllerTest {
     private MockMvc mockMvc;
@@ -115,7 +109,7 @@ class ProdutoControllerTest {
             when(buscarProdutoUseCase.buscarPorIds(anyList()))
                     .thenReturn(produtos);
 
-            mockMvc.perform(get("/produtos:byIds?ids=1,2")
+            mockMvc.perform(get("/produtos?ids=1,2")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$[0].id").value(produtos.get(0).id()))
