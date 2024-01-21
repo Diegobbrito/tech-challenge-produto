@@ -8,8 +8,8 @@
       "nome": {"type": "string"},
       "descricao": {"type": "string"},
       "valor": {"type": "string"},
-      "imagem": {"type": "string"}
+      "imagemUrl": {"type": "string"}
     },
-    "required": ["id", "nome", "descricao", "valor", "imagem"]
+    "required": ["id", "nome", "descricao", "valor", "imagemUrl"]
   }
 }
