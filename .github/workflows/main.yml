@@ -26,4 +26,5 @@ jobs:
           -Dsonar.projectKey=Diegobbrito_tech-challenge-produto \
           -Dsonar.organization=diegobbrito \
           -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.login${SONAR_TOKEN}
+          -Dsonar.login${SONAR_TOKEN} \
+          -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
