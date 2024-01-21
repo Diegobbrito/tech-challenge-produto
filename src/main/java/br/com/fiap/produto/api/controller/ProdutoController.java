@@ -50,6 +50,14 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoResponse>> listarPorCategoria(@Parameter(example = "1") @PathVariable Integer categoriaId){
         return ResponseEntity.ok(buscarProdutoUseCase.buscarPorCategoria(categoriaId));
     }
+
+    @Operation(summary = "Listagem de produtos por ids")
+    @GetMapping(path = "/produtos:byIds", params = "ids")
+    public ResponseEntity<List<ProdutoResponse>> listarPorIds(@RequestParam List<Integer> ids){
+        return ResponseEntity.ok(buscarProdutoUseCase.buscarPorIds(ids));
+    }
+
+
     @Operation(summary = "Criação de produto")
     @PostMapping("/produtos")
     public ResponseEntity<ProdutoResponse> criar(@RequestBody ProdutoRequest request){
