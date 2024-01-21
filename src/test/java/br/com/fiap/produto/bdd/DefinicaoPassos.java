@@ -1,5 +1,8 @@
 package br.com.fiap.produto.bdd;
 
+import br.com.fiap.produto.api.dto.response.ProdutoResponse;
+import br.com.fiap.produto.utils.ProdutosHelper;
+import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import io.restassured.response.Response;
@@ -14,6 +17,29 @@ public class DefinicaoPassos {
     private Response response;
 
     private String ENDPOINT_BASE = "http://localhost:8080/lanchonete";
+
+    private ProdutoResponse produto;
+
+    @Quando("submeter um novo produto")
+    public ProdutoResponse submeterUmNovoProduto() {
+        var produtoRequest = ProdutosHelper.gerarProdutoRequest();
+        response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(produtoRequest)
+                .when().post(ENDPOINT_BASE + "/produtos");
+        return response.then().extract().as(ProdutoResponse.class);
+    }
+    @Então("o produto é registrado com sucesso")
+    public void produtoRegistradoComSucesso() {
+        response.then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body(matchesJsonSchemaInClasspath("./schemas/ProdutoResponseSchema.json"));
+    }
+
+    @Dado("que um produto já foi registrado")
+    public void produtoJaFoiRegistrado() {
+        produto = submeterUmNovoProduto();
+    }
 
     @Quando("requisitar a busca de produtos")
     public void requisitarBuscaDeProdutos() {
@@ -30,12 +56,27 @@ public class DefinicaoPassos {
                 .body(matchesJsonSchemaInClasspath("./schemas/ProdutosResponseSchema.json"));
     }
 
+    @Quando("requisitar a busca de produtos por ids")
+    public void requisitarABuscaDeProdutosPorIds() {
+        response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get(ENDPOINT_BASE + "/produtos?ids=1");
+    }
+
+    @Então("a lista dos produtos é exibida com sucesso")
+    public void aListaDosProdutosÉExibidaComSucesso() {
+        response.then()
+                .statusCode(HttpStatus.OK.value())
+                .body(matchesJsonSchemaInClasspath("./schemas/ProdutosResponseSchema.json"));
+    }
+
     @Quando("requisitar a busca de produtos de uma categoria")
     public void requisitarBuscaDeProdutosPorCategoria() {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get(ENDPOINT_BASE + "/produtos");
+                .get(ENDPOINT_BASE + "/produtos/{categoriaId}", 1);
     }
 
     @Então("a lista de produtos da categoria é exibida com sucesso")
@@ -46,25 +87,50 @@ public class DefinicaoPassos {
     }
 
     @Quando("requisitar a lista de categorias")
-    public void requisitar_a_lista_de_categorias() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void requisitarListaDeCategorias() {
+        response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get(ENDPOINT_BASE + "/categorias");
     }
     @Então("a lista de categorias são exibidas com sucesso")
-    public void a_lista_de_categorias_são_exibidas_com_sucesso() {
+    public void listaDeCategoriasSaoExibidasComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
                 .body(matchesJsonSchemaInClasspath("./schemas/CatetoriasResponseSchema.json"));
     }
 
-    @Quando("requisitar a criação de um novo pedido")
-    public void requisitar_a_criação_de_um_novo_pedido() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    @Quando("requisitar a alteração do produto")
+    public void requisitarAlteraçaoDoProduto() {
+        var produtoRequest = ProdutosHelper.gerarProdutoRequestAlterado();
+
+        response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(produtoRequest)
+                .when()
+                .put(ENDPOINT_BASE +"/produtos/{id}", produto.id());
     }
-    @Então("um novo pedido para pagamento é realizado com sucesso")
-    public void um_novo_pedido_para_pagamento_é_realizado_com_sucesso() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    @Então("o produto é atualizado com sucesso")
+    public void produtoAtualizadoComSucesso() {
+        response.then()
+                .statusCode(HttpStatus.OK.value())
+                .body(matchesJsonSchemaInClasspath("./schemas/ProdutoResponseSchema.json"));
     }
+
+
+    @Quando("requisitar a exclusão do produto")
+    public void requisitarExclusaoDoProduto() {
+        response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .delete(ENDPOINT_BASE +"/produtos/{id}", produto.id());
+    }
+    @Então("o produto é removido com sucesso")
+    public void produtoRemovidoComSucesso() {
+        response.then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+
+
 }

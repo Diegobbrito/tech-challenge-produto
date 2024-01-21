@@ -1,15 +1,13 @@
 {
-  "title": "Produtos Response",
+  "title": "Categorias Response",
   "type": "array",
   "items": {
     "type": "object",
     "properties": {
       "id": {"type": "integer"},
-      "nome": {"type": "string"},
-      "descricao": {"type": "string"},
-      "valor": {"type": "string"},
-      "imagem": {"type": "string"}
+      "tipo": {"type": "string"},
+      "descricao": {"type": "string"}
     },
-    "required": ["id", "nome", "descricao", "valor", "imagem"]
+    "required": ["id", "tipo", "descricao"]
   }
 }

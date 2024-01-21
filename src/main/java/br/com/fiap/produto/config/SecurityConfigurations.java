@@ -1,9 +1,9 @@
 package br.com.fiap.produto.config;
 
 import br.com.fiap.produto.filter.SecurityFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,6 +26,7 @@ public class SecurityConfigurations {
         this.securityFilter = securityFilter;
     }
 
+    @ConditionalOnProperty(name = "pedido.security.jwt.enable", havingValue = "true", matchIfMissing = true)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
@@ -36,6 +37,18 @@ public class SecurityConfigurations {
                 }
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @ConditionalOnProperty(name = "pedido.security.jwt.enable", havingValue = "false")
+    @Bean
+    public SecurityFilterChain securityFilterChainDisabled(HttpSecurity http) throws Exception {
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth ->{
+                            auth.anyRequest().permitAll();
+                        }
+                )
                 .build();
     }
 

@@ -1,6 +1,6 @@
 {
-  "title": "Produtos Response",
-  "type": "array",
+  "title": "Produto Response",
+  "type": "object",
   "items": {
     "type": "object",
     "properties": {

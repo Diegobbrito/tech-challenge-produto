@@ -30,4 +30,10 @@ public class BuscarProdutoUseCase implements IBuscarProduto {
         return produtos.stream().map(ProdutoAdapter::toResponse).collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProdutoResponse> buscarPorIds(List<Integer> ids) {
+        final var produtos = this.repository.buscarTodosPorIds(ids);
+        return produtos.stream().map(ProdutoAdapter::toResponse).collect(Collectors.toList());
+    }
+
 }
