@@ -18,6 +18,8 @@ public class DefinicaoPassos {
 
     private String ENDPOINT_BASE = "http://localhost:8080/lanchonete";
 
+    private ProdutoResponse produto;
+
     @Quando("submeter um novo produto")
     public ProdutoResponse submeterUmNovoProduto() {
         var produtoRequest = ProdutosHelper.gerarProdutoRequest();
@@ -36,7 +38,7 @@ public class DefinicaoPassos {
 
     @Dado("que um produto já foi registrado")
     public void produtoJaFoiRegistrado() {
-        submeterUmNovoProduto();
+        produto = submeterUmNovoProduto();
     }
 
     @Quando("requisitar a busca de produtos")
@@ -59,7 +61,7 @@ public class DefinicaoPassos {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .get(ENDPOINT_BASE + "/produtos:byIds?ids=1");
+                .get(ENDPOINT_BASE + "/produtos?ids=1");
     }
 
     @Então("a lista dos produtos é exibida com sucesso")
@@ -106,7 +108,7 @@ public class DefinicaoPassos {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(produtoRequest)
                 .when()
-                .put(ENDPOINT_BASE +"/produtos/{id}", 1);
+                .put(ENDPOINT_BASE +"/produtos/{id}", produto.id());
     }
     @Então("o produto é atualizado com sucesso")
     public void produtoAtualizadoComSucesso() {
@@ -121,7 +123,7 @@ public class DefinicaoPassos {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete(ENDPOINT_BASE +"/produtos/{id}", 1);
+                .delete(ENDPOINT_BASE +"/produtos/{id}", produto.id());
     }
     @Então("o produto é removido com sucesso")
     public void produtoRemovidoComSucesso() {
