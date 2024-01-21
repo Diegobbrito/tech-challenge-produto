@@ -1,15 +1,18 @@
 package br.com.fiap.produto.api.controller;
 
+import br.com.fiap.produto.api.dto.request.ProdutoRequest;
 import br.com.fiap.produto.api.dto.response.CategoriaResponse;
 import br.com.fiap.produto.api.dto.response.ProdutoResponse;
 import br.com.fiap.produto.api.handler.RestExceptionHandler;
 import br.com.fiap.produto.core.usecase.categoria.IBuscarCategoria;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,8 +21,12 @@ import java.util.List;
 import br.com.fiap.produto.core.usecase.produto.IBuscarProduto;
 import br.com.fiap.produto.core.usecase.produto.ICriarProduto;
 import br.com.fiap.produto.core.usecase.produto.IGerenciarProduto;
+import br.com.fiap.produto.gateway.repository.produto.ProdutoEntity;
+import br.com.fiap.produto.utils.ProdutosHelper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -60,64 +67,113 @@ class ProdutoControllerTest {
     void tearDown() throws Exception {
         openMocks.close();
     }
+    @Nested
+    class ListarProdutosECategorias {
+        @Test
+        void devePermitirConsultarTodosOsProdutos() throws Exception {
+            var produtos = gerarListaDeProdutos();
+            when(buscarProdutoUseCase.buscarTodos())
+                    .thenReturn(produtos);
 
-    @Test
-    void devePermitirConsultarTodosOsProdutos() throws Exception {
-        var produtos = gerarListaDeProdutos();
-        when(buscarProdutoUseCase.buscarTodos())
-                .thenReturn(produtos);
+            mockMvc.perform(get("/produtos")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(produtos.get(0).id()))
+                    .andExpect(jsonPath("$[0].descricao").value(produtos.get(0).descricao()))
+                    .andExpect(jsonPath("$[0].nome").value(produtos.get(0).nome()))
+                    .andExpect(jsonPath("$[0].valor").value(produtos.get(0).valor()))
+                    .andExpect(jsonPath("$[1].id").value(produtos.get(1).id()))
+                    .andExpect(jsonPath("$[1].descricao").value(produtos.get(1).descricao()))
+                    .andExpect(jsonPath("$[1].nome").value(produtos.get(1).nome()))
+                    .andExpect(jsonPath("$[1].valor").value(produtos.get(1).valor()));
+            verify(buscarProdutoUseCase, times(1)).buscarTodos();
+        }
 
-        mockMvc.perform(get("/produtos")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(produtos.get(0).id()))
-                .andExpect(jsonPath("$[0].descricao").value(produtos.get(0).descricao()))
-                .andExpect(jsonPath("$[0].nome").value(produtos.get(0).nome()))
-                .andExpect(jsonPath("$[0].valor").value(produtos.get(0).valor()))
-                .andExpect(jsonPath("$[1].id").value(produtos.get(1).id()))
-                .andExpect(jsonPath("$[1].descricao").value(produtos.get(1).descricao()))
-                .andExpect(jsonPath("$[1].nome").value(produtos.get(1).nome()))
-                .andExpect(jsonPath("$[1].valor").value(produtos.get(1).valor()));
-        verify(buscarProdutoUseCase, times(1)).buscarTodos();
+        @Test
+        void devePermitirConsultarOsProdutosPorCategoria() throws Exception {
+            var produtos = gerarListaDeProdutosComUmaCategoria();
+            when(buscarProdutoUseCase.buscarPorCategoria(1))
+                    .thenReturn(produtos);
+
+            mockMvc.perform(get("/produtos/{idCategoria}", 1)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(produtos.get(0).id()))
+                    .andExpect(jsonPath("$[0].descricao").value(produtos.get(0).descricao()))
+                    .andExpect(jsonPath("$[0].nome").value(produtos.get(0).nome()))
+                    .andExpect(jsonPath("$[0].valor").value(produtos.get(0).valor()))
+                    .andExpect(jsonPath("$[1].id").value(produtos.get(1).id()))
+                    .andExpect(jsonPath("$[1].descricao").value(produtos.get(1).descricao()))
+                    .andExpect(jsonPath("$[1].nome").value(produtos.get(1).nome()))
+                    .andExpect(jsonPath("$[1].valor").value(produtos.get(1).valor()));
+            verify(buscarProdutoUseCase, times(1)).buscarPorCategoria(any(Integer.class));
+        }
+
+        @Test
+        void devePermitirConsultarOsProdutosPorIds() throws Exception {
+            var produtos = gerarListaDeProdutos();
+            when(buscarProdutoUseCase.buscarPorIds(anyList()))
+                    .thenReturn(produtos);
+
+            mockMvc.perform(get("/produtos:byIds?ids=1,2")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(produtos.get(0).id()))
+                    .andExpect(jsonPath("$[0].descricao").value(produtos.get(0).descricao()))
+                    .andExpect(jsonPath("$[0].nome").value(produtos.get(0).nome()))
+                    .andExpect(jsonPath("$[0].valor").value(produtos.get(0).valor()));
+            verify(buscarProdutoUseCase, times(1)).buscarPorIds(anyList());
+        }
+
+        @Test
+        void devePermitirConsultarTodasAsCategorias() throws Exception {
+            var categorias = gerarListaCategorias();
+            when(buscarCategoriaUseCase.buscarTodas())
+                    .thenReturn(categorias);
+
+            mockMvc.perform(get("/categorias")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$[0].id").value(categorias.get(0).id()))
+                    .andExpect(jsonPath("$[0].descricao").value(categorias.get(0).descricao()))
+                    .andExpect(jsonPath("$[0].tipo").value(categorias.get(0).tipo()))
+                    .andExpect(jsonPath("$[1].id").value(categorias.get(1).id()))
+                    .andExpect(jsonPath("$[1].descricao").value(categorias.get(1).descricao()))
+                    .andExpect(jsonPath("$[1].tipo").value(categorias.get(1).tipo()));
+            verify(buscarCategoriaUseCase, times(1)).buscarTodas();
+        }
     }
 
-    @Test
-    void devePermitirConsultarOsProdutosPorCategoria() throws Exception {
-        var produtos = gerarListaDeProdutosComUmaCategoria();
-        when(buscarProdutoUseCase.buscarPorCategoria(1))
-                .thenReturn(produtos);
+    @Nested
+    class CriarProduto {
+        @Test
+        void devePermitirRegistrarProduto() throws Exception {
 
-        mockMvc.perform(get("/produtos/{idCategoria}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(produtos.get(0).id()))
-                .andExpect(jsonPath("$[0].descricao").value(produtos.get(0).descricao()))
-                .andExpect(jsonPath("$[0].nome").value(produtos.get(0).nome()))
-                .andExpect(jsonPath("$[0].valor").value(produtos.get(0).valor()))
-                .andExpect(jsonPath("$[1].id").value(produtos.get(1).id()))
-                .andExpect(jsonPath("$[1].descricao").value(produtos.get(1).descricao()))
-                .andExpect(jsonPath("$[1].nome").value(produtos.get(1).nome()))
-                .andExpect(jsonPath("$[1].valor").value(produtos.get(1).valor()));
-        verify(buscarProdutoUseCase, times(1)).buscarPorCategoria(any(Integer.class));
+            var produtoRequest = ProdutosHelper.gerarProdutoRequest();
+            var produtoResponse = ProdutosHelper.gerarProdutoResponse();
+            when(criarProdutoUseCase.criar(any(ProdutoRequest.class)))
+                    .thenReturn(produtoResponse);
+
+            mockMvc.perform(post("/produtos")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(asJsonString(produtoRequest)))
+                    .andExpect(status().isCreated());
+            verify(criarProdutoUseCase, times(1))
+                    .criar(any(ProdutoRequest.class));
+
+        }
+    }
+    @Nested
+    class DeletarProduto {
+        @Test
+        void devePermitirApagarProduto() throws Exception {
+            mockMvc.perform(delete("/produtos/{id}", 1))
+                    .andExpect(status().isNoContent());
+            verify(gerenciarProdutoUseCase, times(1))
+                    .excluirProduto(anyInt());
+        }
     }
 
-    @Test
-    void devePermitirConsultarTodasAsCategorias() throws Exception {
-        var categorias = gerarListaCategorias();
-        when(buscarCategoriaUseCase.buscarTodas())
-                .thenReturn(categorias);
-
-        mockMvc.perform(get("/categorias")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(categorias.get(0).id()))
-                .andExpect(jsonPath("$[0].descricao").value(categorias.get(0).descricao()))
-                .andExpect(jsonPath("$[0].tipo").value(categorias.get(0).tipo()))
-                .andExpect(jsonPath("$[1].id").value(categorias.get(1).id()))
-                .andExpect(jsonPath("$[1].descricao").value(categorias.get(1).descricao()))
-                .andExpect(jsonPath("$[1].tipo").value(categorias.get(1).tipo()));
-        verify(buscarCategoriaUseCase, times(1)).buscarTodas();
-    }
 
     private List<CategoriaResponse> gerarListaCategorias() {
         var lanche = new CategoriaResponse(1, "Lanche", "Lanche");
@@ -136,6 +192,14 @@ class ProdutoControllerTest {
         var lanche = new ProdutoResponse(1, "Hamburguer", "Hambuguer simples", "R$ 14,90", "");
         var lancheDaCasa = new ProdutoResponse(2, "Hamburguer da casa", "Hambuguer especial", "R$ 19,90", "");
         return List.of(lanche, lancheDaCasa);
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
