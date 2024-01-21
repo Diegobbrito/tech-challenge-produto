@@ -18,7 +18,6 @@ public class DefinicaoPassos {
 
     private String ENDPOINT_BASE = "http://localhost:8080/lanchonete";
 
-
     @Quando("submeter um novo produto")
     public ProdutoResponse submeterUmNovoProduto() {
         var produtoRequest = ProdutosHelper.gerarProdutoRequest();
@@ -50,6 +49,21 @@ public class DefinicaoPassos {
 
     @Então("a lista de todos produtos é exibida com sucesso")
     public void listaDeProdutosExibidaComSucesso() {
+        response.then()
+                .statusCode(HttpStatus.OK.value())
+                .body(matchesJsonSchemaInClasspath("./schemas/ProdutosResponseSchema.json"));
+    }
+
+    @Quando("requisitar a busca de produtos por ids")
+    public void requisitarABuscaDeProdutosPorIds() {
+        response = given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when()
+                .get(ENDPOINT_BASE + "/produtos:byIds?ids=1");
+    }
+
+    @Então("a lista dos produtos é exibida com sucesso")
+    public void aListaDosProdutosÉExibidaComSucesso() {
         response.then()
                 .statusCode(HttpStatus.OK.value())
                 .body(matchesJsonSchemaInClasspath("./schemas/ProdutosResponseSchema.json"));
@@ -92,7 +106,7 @@ public class DefinicaoPassos {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(produtoRequest)
                 .when()
-                .put("/mensagens/{id}", 1);
+                .put(ENDPOINT_BASE +"/produtos/{id}", 1);
     }
     @Então("o produto é atualizado com sucesso")
     public void produtoAtualizadoComSucesso() {
@@ -107,13 +121,14 @@ public class DefinicaoPassos {
         response = given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .when()
-                .delete("/mensagens/{id}", 1);
+                .delete(ENDPOINT_BASE +"/produtos/{id}", 1);
     }
     @Então("o produto é removido com sucesso")
     public void produtoRemovidoComSucesso() {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
     }
+
 
 
 }

@@ -15,6 +15,11 @@ Funcionalidade: API - Pedidos
     Quando requisitar a busca de produtos
     Então a lista de todos produtos é exibida com sucesso
 
+  Cenário: Listar produtos por Ids
+    Dado que um produto já foi registrado
+    Quando requisitar a busca de produtos por ids
+    Então a lista dos produtos é exibida com sucesso
+
   Cenário: Buscar produtos de uma categoria
     Dado que um produto já foi registrado
     Quando requisitar a busca de produtos de uma categoria
