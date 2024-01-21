@@ -1,6 +1,7 @@
 package br.com.fiap.produto.utils;
 
 import br.com.fiap.produto.api.dto.request.ProdutoRequest;
+import br.com.fiap.produto.api.dto.response.ProdutoResponse;
 import br.com.fiap.produto.core.entity.Categoria;
 import br.com.fiap.produto.core.entity.Produto;
 import br.com.fiap.produto.gateway.repository.produto.ProdutoEntity;
@@ -62,6 +63,16 @@ public abstract class ProdutosHelper {
                 );
     }
 
+    public static ProdutoResponse gerarProdutoResponse() {
+        return new ProdutoResponse(
+                1,
+                "Hamburguer",
+                "Hamburguer da casa",
+                "R$ 14.90",
+                "teste"
+        );
+    }
+
     public static ProdutoRequest gerarProdutoRequestAlterado() {
         return new ProdutoRequest(
                 "Hamburguer",
@@ -70,6 +81,5 @@ public abstract class ProdutosHelper {
                 1,
                 "teste"
         );
-
     }
 }
