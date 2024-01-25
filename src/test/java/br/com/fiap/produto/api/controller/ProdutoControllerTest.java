@@ -151,7 +151,11 @@ class ProdutoControllerTest {
             mockMvc.perform(post("/produtos")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(asJsonString(produtoRequest)))
-                    .andExpect(status().isCreated());
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").value(produtoResponse.id()))
+                    .andExpect(jsonPath("$.descricao").value(produtoResponse.descricao()))
+                    .andExpect(jsonPath("$.valor").value(produtoResponse.valor()))
+                    .andExpect(jsonPath("$.nome").value(produtoResponse.nome()));
             verify(criarProdutoUseCase, times(1))
                     .criar(any(ProdutoRequest.class));
 
