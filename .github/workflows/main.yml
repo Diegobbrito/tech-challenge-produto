@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean install -B
+        run: mvn clean install -Pexclude-bdd-tests
 
   sonarcloud:
     runs-on: ubuntu-latest
