@@ -1,4 +1,4 @@
-name: Build and SonarQube Analysis
+name: Build and SonarCloud Analysis
 
 on:
   pull_request:
@@ -37,8 +37,11 @@ jobs:
         distribution: 'adopt'
         java-version: '17'
 
-    - name: Analyze with SonarQube
+    - name: Analyze with SonarCloud
       run: |
         mvn sonar:sonar \
-          -Dsonar.host.https://sonarcloud.io/project/information?id=Diegobbrito_tech-challenge-produto \
-          -Dsonar.login=secrets.SONAR_TOKEN
+          -Dsonar.organization=diegobbrito \
+          -Dsonar.projectKey=Diegobbrito_tech-challenge-produto \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}:
+
