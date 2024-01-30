@@ -83,4 +83,26 @@ class BuscarProdutoUseCaseTest {
                 .extracting(ProdutoResponse::nome)
                 .isEqualTo("Hamburguer");
     }
+
+    @Test
+    void devePermitirConsultarOsProdutosPorIds() {
+        // Arrange
+        Produto lanche =ProdutosHelper.gerarLanche();
+        var produtosMock = List.of(lanche);
+        when(repository.buscarTodosPorIds(anyList())).thenReturn(produtosMock);
+        // Act
+        var produtos = useCase.buscarPorIds(List.of(1,2));
+        // Assert
+        verify(repository, times(1))
+                .buscarTodosPorIds(anyList());
+        assertThat(produtos)
+                .isInstanceOf(List.class)
+                .isNotNull();
+        assertThat(produtos.get(0))
+                .extracting(ProdutoResponse::id)
+                .isEqualTo(1);
+        assertThat(produtos.get(0))
+                .extracting(ProdutoResponse::nome)
+                .isEqualTo("Hamburguer");
+    }
 }
