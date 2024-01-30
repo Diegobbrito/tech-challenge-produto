@@ -38,6 +38,6 @@ jobs:
           java-version: '17'
 
       - name: SonarCloud Scan
-        run: mvn sonar:sonar -Dsonar.projectKey=Diegobbrito_tech-challenge-produto -Dsonar.organization=diegobbrito -Dsonar.host.url=https://sonarcloud.io -Dsonar.sources=src -Dsonar.tests=src/test -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPaths=target/jacoco.exec -Dsonar.junit.excludeCategories=BDD -Dsonar.exclusions=**/bdd/**
+        run: mvn sonar:sonar -Dsonar.projectKey=Diegobbrito_tech-challenge-produto -Dsonar.organization=diegobbrito -Dsonar.host.url=https://sonarcloud.io -Dsonar.sources=src/main -Dsonar.tests=src/test -Dsonar.java.coveragePlugin=jacoco -Dsonar.jacoco.reportPaths=target/jacoco.exec -Dsonar.junit.excludeCategories=BDD -Dsonar.exclusions=**/bdd/**
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
