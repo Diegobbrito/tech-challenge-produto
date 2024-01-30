@@ -1,5 +1,5 @@
 # language: pt
-Funcionalidade: API - Pedidos
+Funcionalidade: API - Produtos
 
   @smoke
   Cenário: Listar todas as categorias
