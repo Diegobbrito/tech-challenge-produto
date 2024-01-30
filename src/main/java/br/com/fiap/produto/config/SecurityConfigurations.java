@@ -26,7 +26,7 @@ public class SecurityConfigurations {
         this.securityFilter = securityFilter;
     }
 
-    @ConditionalOnProperty(name = "pedido.security.jwt.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(name = "produto.security.jwt.enable", havingValue = "true", matchIfMissing = true)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
@@ -40,15 +40,12 @@ public class SecurityConfigurations {
                 .build();
     }
 
-    @ConditionalOnProperty(name = "pedido.security.jwt.enable", havingValue = "false")
+    @ConditionalOnProperty(name = "produto.security.jwt.enable", havingValue = "false")
     @Bean
     public SecurityFilterChain securityFilterChainDisabled(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->{
-                            auth.anyRequest().permitAll();
-                        }
-                )
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .build();
     }
 

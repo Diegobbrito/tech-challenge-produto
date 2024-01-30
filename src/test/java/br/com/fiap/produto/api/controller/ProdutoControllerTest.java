@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,6 +30,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 class ProdutoControllerTest {
     private MockMvc mockMvc;
 
@@ -50,10 +54,6 @@ class ProdutoControllerTest {
         ProdutoController mensagemController = new ProdutoController(buscarProdutoUseCase,criarProdutoUseCase,gerenciarProdutoUseCase, buscarCategoriaUseCase);
         mockMvc = MockMvcBuilders.standaloneSetup(mensagemController)
                 .setControllerAdvice(new RestExceptionHandler())
-                .addFilter((request, response, chain) -> {
-                    response.setCharacterEncoding("UTF-8");
-                    chain.doFilter(request, response);
-                }, "/*")
                 .build();
     }
 

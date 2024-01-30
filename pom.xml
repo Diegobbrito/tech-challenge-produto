@@ -36,7 +36,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>5.9.3</junit.version>
 		<aspectj.version>1.9.19</aspectj.version>
-		<sonar.java.binaries>target/classes</sonar.java.binaries>
+		<sonar.organization>diegobbrito</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			target/jacoco-reports/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -178,30 +182,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.sonarsource.scanner.maven</groupId>
-				<artifactId>sonar-maven-plugin</artifactId>
-				<version>3.9.1.2184</version>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.7</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -209,10 +197,7 @@
 
 	<profiles>
 		<profile>
-			<id>exclude-bdd-tests</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
+			<id>coverage</id>
 			<build>
 				<plugins>
 					<plugin>
@@ -248,6 +233,9 @@
 								</configuration>
 							</execution>
 						</executions>
+						<configuration>
+							<outputDirectory>${project.build.directory}/jacoco-reports</outputDirectory>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
