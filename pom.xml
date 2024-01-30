@@ -36,6 +36,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>5.9.3</junit.version>
 		<aspectj.version>1.9.19</aspectj.version>
+		<sonar.java.binaries>target/classes</sonar.java.binaries>
 	</properties>
 	<dependencies>
 		<dependency>
