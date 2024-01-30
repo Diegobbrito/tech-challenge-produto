@@ -1,6 +1,7 @@
 package br.com.fiap.produto.gateway.repository.categoria;
 
 import br.com.fiap.produto.core.entity.Categoria;
+import br.com.fiap.produto.gateway.repository.produto.ProdutoEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,10 +51,17 @@ class CategoriaRepositoryTest {
                 .isInstanceOf(Categoria.class)
                 .extracting(Categoria::getId)
                 .isEqualTo(1);
+        assertThat(categoriasMock.get(0))
+                .isInstanceOf(CategoriaEntity.class)
+                .extracting(CategoriaEntity::getProdutos)
+                .isNotNull();
     }
 
     private List<CategoriaEntity> gerarCategorias() {
-        return List.of(new CategoriaEntity(1),
+        var categoria = new CategoriaEntity(1);
+        categoria.setTitulo("Lanche");
+        categoria.setProdutos(List.of(new ProdutoEntity()));
+        return List.of(categoria, new CategoriaEntity(1),
                 new CategoriaEntity(2),
                 new CategoriaEntity(3));
     }
