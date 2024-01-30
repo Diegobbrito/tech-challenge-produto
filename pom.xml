@@ -41,6 +41,7 @@
 		<sonar.coverage.jacoco.xmlReportPaths>
 			target/jacoco-reports/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.exclusions>**/config/**,**/*Application.java,**/CategoriaEntity.java</sonar.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
