@@ -1,6 +1,12 @@
 # Pos Tech Lanchonete
 
 Projeto desenvolvido para o Tech Challenge da Pos Tech FIAP+Alura.
+API de listagem e gerenciamento de produtos.
+
+## Link da projeto no SonarCloud
+
+- [SonarCloud - Produto](https://sonarcloud.io/project/overview?id=Diegobbrito_tech-challenge-produto)
+
 
 ## Como testar a aplicação com docker compose
 
