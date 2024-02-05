@@ -32,6 +32,9 @@ A aplicação é iniciada com dados de categorias e produtos no banco de dados.
 
 **Back-end:** Java, Springboot
 
+## Video
+Gravamos um video sobre a nossa quarta parte do projeto:
+- https://youtu.be/MrVDanTUrKI
 
 ## Autores
 
