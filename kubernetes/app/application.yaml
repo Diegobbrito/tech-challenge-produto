@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: produto
+  labels:
+    app: produto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: produto
+  template:
+    metadata:
+      labels:
+        app: produto
+    spec:
+      containers:
+        - name: produto
+          image: diegobbrito17/produtos:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: db_database
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: db_user
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: db_password
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: db_port
+            - name: DB_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: db_server
+            - name: DB_PASSWORD_ROOT
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: db_root_password
+            - name: BACK_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: back_port
+            - name: SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-produto
+                  key: secret
