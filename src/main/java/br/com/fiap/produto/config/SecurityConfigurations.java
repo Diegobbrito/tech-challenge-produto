@@ -1,9 +1,9 @@
 package br.com.fiap.produto.config;
 
 import br.com.fiap.produto.filter.SecurityFilter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfigurations {
 
-
     private final SecurityFilter securityFilter;
     private static final String[] AUTH_WHITELIST = {
             "/v3/api-docs/**",
@@ -26,26 +25,18 @@ public class SecurityConfigurations {
         this.securityFilter = securityFilter;
     }
 
-    @ConditionalOnProperty(name = "produto.security.jwt.enable", havingValue = "true", matchIfMissing = true)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->{
                     auth.requestMatchers(AUTH_WHITELIST).permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/produtos").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/categorias").permitAll();
                     auth.anyRequest().authenticated();
                 }
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
-
-    @ConditionalOnProperty(name = "produto.security.jwt.enable", havingValue = "false")
-    @Bean
-    public SecurityFilterChain securityFilterChainDisabled(HttpSecurity http) throws Exception {
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
                 .build();
     }
 
